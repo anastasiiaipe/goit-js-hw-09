@@ -69,55 +69,19 @@ const images = [
 
 const gallery = document.querySelector('.gallery');
 
-function imageGallery() {
-  const image = images
-    .map(({ preview, original, description }) => {
-      return `<li class="gallery-item">
+const markup = images
+  .map(({ preview, original, description }) => {
+    return `<li class="gallery-item">
       <a class="gallery-link" href="${original}">
         <img
-          class="gallery-image"
-          src="${preview}"
-          data-source="${original}"
-          alt="${description}"
+          class="gallery-image" src="${preview}" alt="${description}"
         />
       </a>
     </li>`;
-    })
-    .join('\n');
-  gallery.innerHTML = image;
+  })
+  .join('\n');
 
-  gallery.addEventListener('click', e => {
-    const targetImage = e.target.closest('.gallery-item img');
-    if (targetImage) {
-      e.preventDefault();
-      const largeImageSource = targetImage.getAttribute('data-source');
-      const imageAlt = targetImage.getAttribute('alt');
-      const instance = basicLightbox.create(
-        `
-          <img src="${largeImageSource}" alt="Large image: ${imageAlt}"/>
-        `,
-        {
-          onShow: () => {
-            document.addEventListener('keydown', handleKeyPress);
-          },
-          onClose: () => {
-            document.removeEventListener('keydown', handleKeyPress);
-          },
-        }
-      );
-
-      instance.show();
-
-      function handleKeyPress(event) {
-        if (event.key === 'Escape') {
-          instance.close();
-        }
-      }
-    }
-  });
-}
-
-imageGallery();
+gallery.insertAdjacentHTML('beforeend', markup);
 
 const lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
